@@ -1,0 +1,20 @@
+kind: pipeline
+type: docker
+name: Nextcloud-Docker
+
+steps:
+  - name: get-version
+    image: alpine
+    commands:
+      - echo "latest,$(cat latest.txt)" > .tags
+      - cat .tags
+
+  - name: build-and-push
+    image: plugins/docker
+    settings:
+      repo: cyanwoods/nextcloud
+      dockerfile: ./Dockerfile
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
